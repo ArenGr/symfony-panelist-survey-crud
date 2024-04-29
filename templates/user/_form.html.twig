@@ -1,4 +1,9 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
 {{ form_start(form) }}
     {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="d-flex justify-content-between">
+        <a href="{{ path('app_user_index') }}" class="btn btn-secondary">Back</a>
+        <button class="btn btn btn-success">{{ button_label|default('Save') }}</button>
+    </div>
 {{ form_end(form) }}

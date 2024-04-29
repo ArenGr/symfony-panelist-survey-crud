@@ -9,21 +9,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SurveyType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('name')
-            ->add('status')
-            ->add('created_at')
-            ->add('deleted_at')
-            ->add('users')
-        ;
-    }
+	public function buildForm(FormBuilderInterface $builder, array $options): void {
+		$builder
+			->add('name')
+			->add('status')
+			->add('users');
+	}
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Survey::class,
-        ]);
-    }
+	public function configureOptions(OptionsResolver $resolver): void {
+		$resolver->setDefaults([
+			'data_class' => Survey::class,
+		]);
+	}
 }

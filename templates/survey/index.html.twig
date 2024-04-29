@@ -1,41 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Survey index{% endblock %}
+{% block title %}Surveys{% endblock %}
 
 {% block body %}
-    <h1>Survey index</h1>
+    <div class="row align-items-center mb-3">
+        <h1 class="col text-primary">Surveys</h1>
+        <div class="col-auto">
+            <a href="{{ path('app_survey_new') }}" class="btn btn-primary">New</a>
+        </div>
+    </div>
 
     <table class="table">
         <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Status</th>
-                <th>Created_at</th>
-                <th>Deleted_at</th>
-                <th>actions</th>
-            </tr>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Created_at</th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
         {% for survey in surveys %}
             <tr>
-                <td>{{ survey.id }}</td>
                 <td>{{ survey.name }}</td>
-                <td>{{ survey.status ? 'Yes' : 'No' }}</td>
+                <td>{{ survey.status ? 'active' : 'inactive' }}</td>
                 <td>{{ survey.createdAt ? survey.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ survey.deletedAt ? survey.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_survey_show', {'id': survey.id}) }}">show</a>
-                    <a href="{{ path('app_survey_edit', {'id': survey.id}) }}">edit</a>
+                <td class="align-content-end d-flex justify-content-end">
+                    <a href="{{ path('app_survey_show', {'id': survey.id}) }}" class="btn btn-info">Show</a>
+                    <a href="{{ path('app_survey_edit', {'id': survey.id}) }}" class="btn btn-warning ms-2">Edit</a>
+                    <a href="{{ path('app_survey_delete', {'id': survey.id}) }}" class="btn btn-danger ms-2">Delete</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="6">No records found</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_survey_new') }}">Create new</a>
 {% endblock %}

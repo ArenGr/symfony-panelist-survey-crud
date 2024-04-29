@@ -1,20 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/devnomad/Desktop/projects/symfony-panelist-survey-crud/src/Controller/HomeController.php'|file_link(0) }}">src/Controller/HomeController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/devnomad/Desktop/projects/symfony-panelist-survey-crud/templates/home/index.html.twig'|file_link(0) }}">templates/home/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-8">
+            <h1 class="display-4 text-center mb-4">Welcome to ... !</h1>
+            <p class="lead text-center">This site provides a simple way to manage panelists and surveys.</p>
+        </div>
+        <div class="col-md-8 mt-5">
+            <p class="lead text-center">Technology Stack</p>
+            <ul class="lead text-right">
+                <li>Symfony 5.4.x</li>
+                <li>Twig</li>
+                <li>ORM (Doctrine)</li>
+                <li>MySql</li>
+                <li>PHP 8.x</li>
+            </ul>
+        </div>
+    </div>
 {% endblock %}
