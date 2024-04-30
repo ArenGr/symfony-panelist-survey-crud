@@ -7,6 +7,7 @@ use App\Form\SurveyType;
 use App\Repository\SurveyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -68,14 +69,15 @@ class SurveyController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_survey_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_survey_delete', methods: ['DELETE'])]
     public function delete(Request $request, Survey $survey, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$survey->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($survey);
-            $entityManager->flush();
-        }
+	{
+		if ($this->isCsrfTokenValid('delete'.$survey->getId(), $request->request->get('_token'))) {
+			$entityManager->remove($survey);
+			$entityManager->flush();
 
-        return $this->redirectToRoute('app_survey_index', [], Response::HTTP_SEE_OTHER);
-    }
+			return new JsonResponse(['message' => 'Entity deleted successfully'], Response::HTTP_NO_CONTENT);
+		}
+		return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+	}
 }
