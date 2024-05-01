@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Survey;
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\SurveyRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,10 +47,12 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(User $user,  SurveyRepository $surveyRepository): Response
     {
         return $this->render('user/show.html.twig', [
             'user' => $user,
+			'assignedSurveys' => $user->getSurvey(),
+			'surveys' => $surveyRepository->findBy(['isActive' => 1]),
         ]);
     }
 
@@ -80,4 +85,51 @@ class UserController extends AbstractController
         }
 		return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
     }
+
+	#[Route('/{id}/survey/{surveyId}', name: 'app_user_unassign_survey', methods: ['DELETE'])]
+	public function unassignSurvey(Request $request, User $user, EntityManagerInterface $entityManager, SurveyRepository $surveyRepository, $surveyId): Response
+	{
+		if ($this->isCsrfTokenValid('unassign'.$user->getId(), $request->request->get('_token'))) {
+			$survey = $surveyRepository->find($surveyId);
+			if (!$survey) {
+				return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+			}
+			try {
+				$user->removeSurvey($survey);
+				$entityManager->persist($user);
+				$entityManager->flush();
+				return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+			} catch (\Exception $e) {
+				return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+			}
+		}
+		return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+	}
+
+	#[Route('/{id}/survey/{surveyId}', name: 'app_user_assign_survey', methods: ['POST'])]
+	public function assignSurvey(Request $request, User $user, EntityManagerInterface $entityManager, SurveyRepository $surveyRepository, $surveyId): Response
+	{
+		if ($this->isCsrfTokenValid('assign'.$user->getId(), $request->request->get('_token'))) {
+			$survey = $surveyRepository->find($surveyId);
+			if (!$survey) {
+				return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+			}
+			try {
+				$user->addSurvey($survey);
+				$entityManager->persist($user);
+				$entityManager->flush();
+
+				$data = [
+					'id' => $survey->getId(),
+					'name' => $survey->getName(),
+					'status' => $survey->isActive(),
+					'createdAt' => $survey->getCreatedAt(),
+				];
+				return new JsonResponse(['data' => $data], Response::HTTP_CREATED);
+			} catch (\Exception $e) {
+				return new JsonResponse(['error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+			}
+		}
+		return new JsonResponse(['error' => 'Invalid CSRF token'], Response::HTTP_FORBIDDEN);
+	}
 }

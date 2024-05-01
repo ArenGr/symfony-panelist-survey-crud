@@ -43,4 +43,47 @@
     </table>
 
     <a href="{{ path('app_user_index') }}" class="btn btn-secondary">Back</a>
+    
+    <h1 class="text-secondary mt-5">Assigned surveys</h1>
+    <table class="table ">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Created_at</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody id="assigned-survey-tbody">
+        {% for assignedSurvey in assignedSurveys %}
+            <tr>
+                <td>{{ assignedSurvey.name }}</td>
+                <td>{{ assignedSurvey.isActive ? 'active' : 'inactive' }}</td>
+                <td>{{ assignedSurvey.createdAt ? assignedSurvey.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td class="align-content-end d-flex justify-content-end">
+                    <button class="btn btn-danger ms-2 unassign-survey" data-survey-id="{{ assignedSurvey.id }}" data-user-id="{{ user.id }}" data-token="{{ csrf_token('unassign' ~ user.id) }}">Unassign</button>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">No records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="row mt-5">
+        <div class="col-2">
+            <button id="assign-survey" class="btn btn-success" data-user-id="{{ user.id }}" data-token="{{ csrf_token('assign' ~ user.id) }}">Assign survey</button>
+        </div>
+        <div class="col-10">
+            <select id="assign-select" class="form-select">
+                {% for survey in surveys %}
+                    <option value="{{ survey.id }}">{{ survey.name }}</option>
+                {% else %}
+                    <option selected disabled>There are no available surveys.</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
 {% endblock %}

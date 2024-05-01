@@ -2,6 +2,7 @@
 
 {{ form_start(form) }}
     {{ form_widget(form) }}
+    {{ form_errors(form) }}
     <div class="d-flex justify-content-between">
         <a href="{{ path('app_survey_index') }}" class="btn btn-secondary">Back</a>
         <button class="btn btn btn-success">{{ button_label|default('Save') }}</button>

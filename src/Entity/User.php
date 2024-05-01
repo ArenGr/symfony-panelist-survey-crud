@@ -5,37 +5,33 @@ namespace App\Entity;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\Table(name: 'user')]
 class User
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+	#[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-	#[Assert\NotBlank]
-	#[Assert\Length(min: 1, max: 255)]
+    #[ORM\Column(length: 255, type: Types::STRING)]
     private ?string $firstname = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+	#[ORM\Column(length: 255, type: Types::STRING,  nullable: true)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 255, unique: true)]
-	#[Assert\NotBlank]
+	#[ORM\Column(length: 255, type: Types::STRING, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-	#[Assert\Regex('/^[0-9]*$/')]
+    #[ORM\Column(length: 20, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-	#[Assert\Length(min: 1, max: 255)]
+    #[ORM\Column(length: 60, nullable: true)]
     private ?string $country = null;
 
-    #[ORM\Column]
+    #[ORM\Column(Types::BOOLEAN)]
     private ?bool $newsletter_agreement = false;
 
     #[ORM\Column]
@@ -45,14 +41,15 @@ class User
     private ?\DateTimeImmutable $deleted_at;
 
     #[ORM\ManyToMany(targetEntity: Survey::class, inversedBy: 'users')]
-    private Collection $survey;
+	#[ORM\JoinTable("user_survey")]
+    private Collection $surveys;
 
 
     public function __construct()
     {
         $this->created_at = new \DateTimeImmutable();
         $this->deleted_at = new \DateTimeImmutable();
-        $this->survey = new ArrayCollection();
+        $this->surveys = new ArrayCollection();
     }
 
 
@@ -162,13 +159,13 @@ class User
      */
     public function getSurvey(): Collection
     {
-        return $this->survey;
+        return $this->surveys;
     }
 
     public function addSurvey(Survey $survey): static
     {
-        if (!$this->survey->contains($survey)) {
-            $this->survey->add($survey);
+        if (!$this->surveys->contains($survey)) {
+            $this->surveys->add($survey);
         }
 
         return $this;
@@ -176,13 +173,8 @@ class User
 
     public function removeSurvey(Survey $survey): static
     {
-        $this->survey->removeElement($survey);
+        $this->surveys->removeElement($survey);
 
         return $this;
     }
-
-	public function __toString(): string
-	{
-		return $this->firstname;
-	}
 }

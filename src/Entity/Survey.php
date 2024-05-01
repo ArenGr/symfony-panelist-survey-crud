@@ -5,21 +5,23 @@ namespace App\Entity;
 use App\Repository\SurveyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SurveyRepository::class)]
+#[ORM\Table(name: 'survey')]
 class Survey
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+	#[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+	#[ORM\Column(length: 255, type: Types::STRING)]
     private ?string $name = null;
 
-    #[ORM\Column]
-    private ?bool $status = null;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private ?bool $isActive = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at;
@@ -27,7 +29,7 @@ class Survey
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deleted_at;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'survey')]
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'surveys')]
     private Collection $users;
 
     public function __construct()
@@ -54,14 +56,14 @@ class Survey
         return $this;
     }
 
-    public function isStatus(): ?bool
+    public function isActive(): ?bool
     {
-        return $this->status;
+        return $this->isActive;
     }
 
-    public function setStatus(bool $status): static
+    public function setIsActive(bool $isActive): static
     {
-        $this->status = $status;
+        $this->isActive = $isActive;
 
         return $this;
     }
@@ -117,8 +119,8 @@ class Survey
         return $this;
     }
 
-	public function __toString(): string
-	{
-		return $this->name;
-	}
+	//public function __toString(): string
+	//{
+	//	return $this->name;
+	//}
 }

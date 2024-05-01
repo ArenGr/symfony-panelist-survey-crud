@@ -23,7 +23,7 @@
         {% for survey in surveys %}
             <tr>
                 <td>{{ survey.name }}</td>
-                <td>{{ survey.status ? 'active' : 'inactive' }}</td>
+                <td>{{ survey.isActive ? 'active' : 'inactive' }}</td>
                 <td>{{ survey.createdAt ? survey.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td class="align-content-end d-flex justify-content-end">
                     <a href="{{ path('app_survey_show', {'id': survey.id}) }}" class="btn btn-info">Show</a>
