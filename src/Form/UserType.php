@@ -17,12 +17,12 @@ class UserType extends AbstractType
 	{
 		$builder
 			->add('firstname', TextType::class, [
+				'required' => true,
 				'constraints' => [
 					new Assert\NotBlank([
 						'message' => 'Please enter your first name.',
 					]),
 				],
-				'required' => true,
 			])
 			->add('lastname', TextType::class, [
 				'label' => 'Last Name',
@@ -41,6 +41,12 @@ class UserType extends AbstractType
 			->add('phone', TextType::class, [
 				'label' => 'Phone Number',
 				'required' => false,
+				'constraints' => [
+					new Assert\Regex([
+						'pattern' => '/^\d+$/',
+						'message' => 'Phone number should contain only digits.',
+					]),
+				],
 			])
 			->add('country', TextType::class, [
 				'label' => 'Country',

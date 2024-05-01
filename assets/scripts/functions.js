@@ -7,7 +7,6 @@ $(document).ready(function () {
 
 function deleteUser() {
     $('.delete-user').click(function (event) {
-
         event.preventDefault();
 
         let button = $(this);
@@ -40,7 +39,6 @@ function deleteUser() {
 
 function deleteSurvey() {
     $('.delete-survey').click(function (event) {
-
         event.preventDefault();
 
         let button = $(this);
@@ -72,8 +70,7 @@ function deleteSurvey() {
 }
 
 function unassignSurvey() {
-    $('.unassign-survey').click(function (event) {
-
+    $(document).on('click', '.unassign-survey', function(event) {
         event.preventDefault();
 
         let button = $(this);
@@ -110,10 +107,12 @@ function unassignSurvey() {
 function assignSurvey() {
     $('#assign-survey').click(function (event) {
         event.preventDefault();
+
         let button = $(this);
         let userId = button.data('user-id');
         let token = button.data('token');
         let surveyId = $('#assign-select').val();
+        let newToken = $('#token').data('token');
 
         $.ajax({
             url: '/user/' + userId + '/survey/' + surveyId,
@@ -122,7 +121,8 @@ function assignSurvey() {
                 _token: token
             },
             success: function (response) {
-                addSurveyRow(response.data, userId, token)
+                // ToDo Hide already assigned surveys
+                addSurveyRow(response.data, userId, newToken)
             },
             error: function (xhr) {
                 if (xhr.status === 404) {
@@ -140,7 +140,7 @@ function assignSurvey() {
 function addSurveyRow(assignedSurvey, userId, token) {
     let newRow = $('<tr>')
         .append('<td>' + assignedSurvey.name + '</td>')
-        .append('<td>' + (assignedSurvey.isActive ? 'active' : 'inactive') + '</td>')
+        .append('<td>' + (assignedSurvey.status ? 'active' : 'inactive') + '</td>')
         .append('<td>' + (assignedSurvey.createdAt.date.split(".")[0] ?? '') + '</td>')
         .append('<td class="align-content-end d-flex justify-content-end">' +
             '<button class="btn btn-danger ms-2 unassign-survey" data-survey-id="' + assignedSurvey.id + '" data-user-id="' + userId + '" data-token="' + token + '">Unassign</button>' +

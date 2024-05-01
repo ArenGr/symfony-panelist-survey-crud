@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Survey;
-use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,7 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class SurveyType extends AbstractType
 {
-	public function buildForm(FormBuilderInterface $builder, array $options): void {
+	public function buildForm(FormBuilderInterface $builder, array $options): void
+	{
 		$builder
 			->add('name', TextType::class, [
 				'constraints' => [
@@ -27,10 +27,10 @@ class SurveyType extends AbstractType
 				'label' => 'Is active?',
 				'required' => false,
 			]);
-			//->add('users');
 	}
 
-	public function configureOptions(OptionsResolver $resolver): void {
+	public function configureOptions(OptionsResolver $resolver): void
+	{
 		$resolver->setDefaults([
 			'data_class' => Survey::class,
 		]);

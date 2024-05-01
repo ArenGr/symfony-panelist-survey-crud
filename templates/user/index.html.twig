@@ -34,7 +34,8 @@
                 <td class="align-content-end d-flex justify-content-end">
                     <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-info">Show</a>
                     <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-warning ms-2">Edit</a>
-                    <a class="btn btn-danger ms-2 delete-user" data-id="{{ user.id }}" data-token="{{ csrf_token('delete' ~ user.id) }}">Delete</a>
+                    <a class="btn btn-danger ms-2 delete-user" data-id="{{ user.id }}"
+                       data-token="{{ csrf_token('delete' ~ user.id) }}">Delete</a>
                 </td>
             </tr>
         {% else %}
